@@ -1,0 +1,49 @@
+package invader;
+
+import javax.swing.SwingUtilities;
+
+public class Inveder {
+
+	public static void main(String[] args) {
+		
+		Mainframe frame = new Mainframe();
+		
+		while(true) {
+			
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e1) {
+				e1.printStackTrace();
+			}
+			
+			while(!frame.isGameover()) {
+				long oldTime = System.currentTimeMillis();  
+				SwingUtilities.invokeLater(new Runnable() {
+					public void run() {
+						frame.update();
+					}
+				});
+				 // ƒƒCƒ“ˆ—  
+				long newTime = System.currentTimeMillis();  
+				long sleepTime = 16 - (newTime - oldTime); // ‹x~‚Å‚«‚éŠÔ  
+				if(sleepTime < 2) {
+					sleepTime = 2; // Å’á‚Å‚à2ms‚Í‹x~  
+				}
+				try {
+					Thread.sleep(sleepTime);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				} // ‹x~ 
+			}
+			
+			//ƒŠƒZƒbƒgˆ—
+			frame.reset();
+			SwingUtilities.invokeLater(new Runnable() {
+				public void run() {
+					frame.repaint();
+				}
+			});
+		}
+		
+	}
+}
