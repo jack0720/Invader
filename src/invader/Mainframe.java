@@ -1,6 +1,7 @@
 package invader;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -50,7 +51,9 @@ public class Mainframe extends JFrame implements KeyListener {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLayout(null);
 		setTitle("InvederGame");
-		setBounds(300,100,FRAMESIZE_X,FRAMESIZE_Y);
+		getContentPane().setPreferredSize(new Dimension(FRAMESIZE_X,FRAMESIZE_Y));
+		pack();
+		setLocationRelativeTo(null);
 
 
 		graphic = new JPanel();
@@ -140,9 +143,7 @@ public class Mainframe extends JFrame implements KeyListener {
 		int i,j;
 		Point t;
 
-
-		Graphics2D g2 = (Graphics2D)g;
-
+		Graphics2D g2 = (Graphics2D)graphic.getGraphics();
 
 		g2.setBackground(Color.black);
 		g2.clearRect(0, 0, graphic.getWidth(), graphic.getHeight());
@@ -327,12 +328,8 @@ public class Mainframe extends JFrame implements KeyListener {
 				}
 			}
 		}
+
 		repaint();
-/*		SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
-				repaint();
-			}
-		});*/
 	}
 
 	public boolean isGameover() {
