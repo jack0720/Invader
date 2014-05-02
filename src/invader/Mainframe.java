@@ -113,7 +113,7 @@ public class Mainframe extends JFrame implements KeyListener {
 			}else if(key == KeyEvent.VK_LEFT) {
 				leftkeypressed = true;
 			}else if(key == KeyEvent.VK_UP) {
-				if(!playershot.isExit()) {
+				if(!playershot.isExist()) {
 					playershot.setX(player.getX()+player.getObject_x()/2-playershot.getObject_x()/2);
 					playershot.setY(player.getY()-playershot.getObject_y());
 					playershot.setExit(true);
@@ -163,7 +163,7 @@ public class Mainframe extends JFrame implements KeyListener {
 		}
 
 
-		if (playershot.isExit()) {
+		if (playershot.isExist()) {
 			t = playershot.getP();
 			g2.drawImage(playershot.getImage(), t.x, t.y, this);
 		}
@@ -289,7 +289,7 @@ public class Mainframe extends JFrame implements KeyListener {
 		}
 
 
-		if(playershot.isExit()) {
+		if(playershot.isExist()) {
 			playershot.move(5.8);
 		}
 

@@ -5,7 +5,7 @@ import java.awt.image.ImageObserver;
 
 public class PlayerShot extends AbstractObject {
 
-	private boolean exit = false;
+	private boolean exist = false;
 	
 	public PlayerShot(int x,int y,Image image,ImageObserver io) {
 		super(x,y,image,io);
@@ -16,23 +16,23 @@ public class PlayerShot extends AbstractObject {
 	public void move(double movevalue) {
 		p.y -= movevalue;
 		if(p.y < 0) {
-			exit = false;
+			exist = false;
 		}
 	}
 
 	@Override
 	public void hit() {
-		exit = false;
+		exist = false;
 		p.x = 0;
 		p.y = 0;
 	}
 
-	public boolean isExit() {
-		return exit;
+	public boolean isExist() {
+		return exist;
 	}
 
 	public void setExit(boolean exit) {
-		this.exit = exit;
+		this.exist = exit;
 	}
 
 }
