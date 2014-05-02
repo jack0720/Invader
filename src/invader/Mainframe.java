@@ -97,7 +97,6 @@ public class Mainframe extends JFrame implements KeyListener {
 		}
 	}
 
-
 	@Override
 	public void keyPressed(KeyEvent e) {
 		int key = e.getKeyCode();
@@ -175,51 +174,6 @@ public class Mainframe extends JFrame implements KeyListener {
 			g2.drawImage(temp.getImage(), t.x, t.y, this);
 		}
 	}
-
-
-/*	public void paint(Graphics g){
-		int i,j;
-		Point t;
-
-
-		Graphics gv = offImage.getGraphics();
-		Graphics2D g2 = (Graphics2D)gv;
-
-
-		g2.setBackground(Color.black);
-		g2.clearRect(0, 0, graphic.getWidth(), graphic.getHeight());
-
-
-		t = player.getP();
-		g2.drawImage(player.getImage(), t.x, t.y, this);
-
-
-		for(i=0;i<ENEMYSIZE_Y;i++) {
-			for(j=0;j<ENEMYSIZE_X;j++) {
-				if(enemy[i][j].isExit()) {
-					t = enemy[i][j].getP();
-					g2.drawImage(enemy[i][j].getImage(), t.x, t.y, this);
-				}
-			}
-		}
-
-
-		if (playershot.isExit()) {
-			t = playershot.getP();
-			g2.drawImage(playershot.getImage(), t.x, t.y, this);
-		}
-
-
-		for(i=0;i<enemyshot.size();i++) {
-			EnemyShot temp = enemyshot.get(i);
-			t = temp.getP();
-			g2.drawImage(temp.getImage(), t.x, t.y, this);
-		}
-
-
-		g.drawImage(offImage, 0, 0, FRAMESIZE_X, FRAMESIZE_Y, this);
-	}*/
-
 
 	public void update() {
 		int i,j;
