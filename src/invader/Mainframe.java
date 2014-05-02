@@ -1,22 +1,18 @@
 package invader;
 
-import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Image;
-import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 
 public class Mainframe extends JFrame implements KeyListener {
 
@@ -29,9 +25,9 @@ public class Mainframe extends JFrame implements KeyListener {
 	private Player player;
 	private Enemy[][] enemy;
 	private PlayerShot playershot;
-	private ArrayList<EnemyShot> enemyshot;
+	private List<EnemyShot> enemyshot;
 
-	private JPanel graphic;
+	private GraphicPanel graphic;
 	private Map<String,Image> imagemap;
 
 
@@ -56,11 +52,6 @@ public class Mainframe extends JFrame implements KeyListener {
 		setLocationRelativeTo(null);
 
 
-		graphic = new JPanel();
-		graphic.setSize(FRAMESIZE_X, FRAMESIZE_Y);
-		add(graphic);
-
-
 		player = new Player(50,FRAMESIZE_Y - 50,imagemap.get("player"),this);
 		playershot = new PlayerShot(0,0,imagemap.get("playershot"),this);
 
@@ -80,9 +71,13 @@ public class Mainframe extends JFrame implements KeyListener {
 
 
 		addKeyListener((KeyListener) this);
+		
+		graphic = new GraphicPanel();
+		graphic.setSize(FRAMESIZE_X, FRAMESIZE_Y);
+		graphic.setObject(player, enemy, playershot, enemyshot);
+		add(graphic);
 
 		setVisible(true);
-
 	}
 
 	private void loadImage() {
@@ -138,43 +133,6 @@ public class Mainframe extends JFrame implements KeyListener {
 
 	}
 
-	public void paint(Graphics g){
-		int i,j;
-		Point t;
-
-		Graphics2D g2 = (Graphics2D)graphic.getGraphics();
-
-		g2.setBackground(Color.black);
-		g2.clearRect(0, 0, graphic.getWidth(), graphic.getHeight());
-
-
-		t = player.getP();
-		g2.drawImage(player.getImage(), t.x, t.y, this);
-
-
-		for(i=0;i<ENEMYSIZE_Y;i++) {
-			for(j=0;j<ENEMYSIZE_X;j++) {
-				if(enemy[i][j].isExit()) {
-					t = enemy[i][j].getP();
-					g2.drawImage(enemy[i][j].getImage(), t.x, t.y, this);
-				}
-			}
-		}
-
-
-		if (playershot.isExist()) {
-			t = playershot.getP();
-			g2.drawImage(playershot.getImage(), t.x, t.y, this);
-		}
-
-
-		for(i=0;i<enemyshot.size();i++) {
-			EnemyShot temp = enemyshot.get(i);
-			t = temp.getP();
-			g2.drawImage(temp.getImage(), t.x, t.y, this);
-		}
-	}
-
 	public void update() {
 		int i,j;
 		int edge;
@@ -182,10 +140,10 @@ public class Mainframe extends JFrame implements KeyListener {
 
 
 		if(leftkeypressed) {
-			player.move(-2.0);
+			player.move(-5.0);
 		}
 		if(rightkeypressed) {
-			player.move(2.0);
+			player.move(5.0);
 		}
 
 
@@ -282,8 +240,8 @@ public class Mainframe extends JFrame implements KeyListener {
 				}
 			}
 		}
-
-		repaint();
+		graphic.setObject(player, enemy, playershot, enemyshot);
+		graphic.repaint();
 	}
 
 	public boolean isGameover() {

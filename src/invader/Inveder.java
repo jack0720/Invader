@@ -48,6 +48,7 @@ public class Inveder {
 				}
 			}
 
+
 			frame.reset();
 			SwingUtilities.invokeLater(new Runnable() {
 				public void run() {
