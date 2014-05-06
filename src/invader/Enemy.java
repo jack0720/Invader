@@ -55,7 +55,7 @@ public class Enemy extends AbstractObject {
 		exist = true;
 	}
 
-	public boolean isExit() {
+	public boolean isExist() {
 		return exist;
 	}
 

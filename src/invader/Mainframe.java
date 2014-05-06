@@ -17,23 +17,25 @@ import javax.swing.JFrame;
 public class Mainframe extends JFrame implements KeyListener {
 
 	private static final long serialVersionUID = 1L;
+	//敵の数　フレームサイズ
 	public static final int ENEMYSIZE_X = 11;
 	public static final int ENEMYSIZE_Y = 5;
 	public static final int FRAMESIZE_X = 1000;
 	public static final int FRAMESIZE_Y = 750;
 
+	//ゲームを構成するオブジェクト
 	private Player player;
 	private Enemy[][] enemy;
 	private PlayerShot playershot;
 	private List<EnemyShot> enemyshot;
 
-	private GraphicPanel graphic;
-	private Map<String,Image> imagemap;
+	private GraphicPanel graphic;//描画用パネル
+	private Map<String,Image> imagemap;//画像管理マップ
 
+	private int moveway=1;//敵の移動方向
+	private double movespeed=0.5;//敵の移動速度
 
-	private int moveway=1;
-	private double movespeed=0.5;
-
+	//ゲーム管理用
 	private boolean gameover = true;
 	private boolean leftkeypressed = false;
 	private boolean rightkeypressed = false;
@@ -41,9 +43,9 @@ public class Mainframe extends JFrame implements KeyListener {
 	public Mainframe() {
 		int i,j;
 
-		loadImage();
+		loadImage();//画像をマップに登録
 
-
+		//フレーム設定
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLayout(null);
 		setTitle("InvederGame");
@@ -51,11 +53,11 @@ public class Mainframe extends JFrame implements KeyListener {
 		pack();
 		setLocationRelativeTo(null);
 
-
+		//プレイヤー設定
 		player = new Player(50,FRAMESIZE_Y - 50,imagemap.get("player"),this);
 		playershot = new PlayerShot(0,0,imagemap.get("playershot"),this);
 
-
+		//敵設定
 		enemy = new Enemy[ENEMYSIZE_Y][ENEMYSIZE_X];
 		int enemy_x = 30;
 		int enemy_y = 30;
@@ -69,9 +71,10 @@ public class Mainframe extends JFrame implements KeyListener {
 		}
 		enemyshot = new ArrayList<EnemyShot>();
 
-
+		//リスナー登録
 		addKeyListener((KeyListener) this);
 		
+		//描画用パネル設定
 		graphic = new GraphicPanel();
 		graphic.setSize(FRAMESIZE_X, FRAMESIZE_Y);
 		graphic.setObject(player, enemy, playershot, enemyshot);
@@ -81,6 +84,7 @@ public class Mainframe extends JFrame implements KeyListener {
 	}
 
 	private void loadImage() {
+		//画像をマップに登録
 		imagemap = new HashMap<String,Image>();
 		try {
 			imagemap.put("enemy", ImageIO.read(new File("./src/enemy.png")));
@@ -138,7 +142,7 @@ public class Mainframe extends JFrame implements KeyListener {
 		int edge;
 		int lives = 0;
 
-
+		//プレイヤーの移動
 		if(leftkeypressed) {
 			player.move(-5.0);
 		}
@@ -146,40 +150,41 @@ public class Mainframe extends JFrame implements KeyListener {
 			player.move(5.0);
 		}
 
-
+		//敵の生存数カウント
 		for(i=0;i<ENEMYSIZE_Y;i++) {
 			for(j=0;j<ENEMYSIZE_X;j++) {
-				if(enemy[i][j].isExit()) {
+				if(enemy[i][j].isExist()) {
 					lives++;
 				}
 			}
 		}
 
-
+		//敵の端の位置を確認
 		if(moveway == 1) {
-
+			//右方向移動中の場合
 			edge = 0;
 			for(i=0;i<ENEMYSIZE_Y;i++) {
 				for(j=0;j<ENEMYSIZE_X;j++) {
-					if(enemy[i][j].isExit() && edge<=enemy[i][j].getX()) {
+					if(enemy[i][j].isExist() && edge<=enemy[i][j].getX()) {
 						edge = enemy[i][j].getX();
 					}
 				}
 			}
 		} else {
-
+			//左方向移動中の場合
 			edge = FRAMESIZE_X;
 			for(i=0;i<ENEMYSIZE_Y;i++) {
 				for(j=0;j<ENEMYSIZE_X;j++) {
-					if(enemy[i][j].isExit() && edge>=enemy[i][j].getX()) {
+					if(enemy[i][j].isExist() && edge>=enemy[i][j].getX()) {
 						edge = enemy[i][j].getX();
 					}
 				}
 			}
 		}
 
+		//横移動か縦移動
 		if(edge <= 30 && moveway != 1 || edge >= FRAMESIZE_X - (enemy[0][0].getObject_x() + 30) && moveway == 1) {
-
+			//縦移動
 			for(i=0;i<ENEMYSIZE_Y;i++) {
 				for(j=0;j<ENEMYSIZE_X;j++) {
 					enemy[i][j].setY(enemy[i][j].getY()+enemy[0][0].getObject_y() + 20);
@@ -187,11 +192,11 @@ public class Mainframe extends JFrame implements KeyListener {
 			}
 			moveway *= -1;
 		} else {
-
+			//横移動
 			for(i=0;i<ENEMYSIZE_Y;i++) {
 				for(j=0;j<ENEMYSIZE_X;j++) {
 					enemy[i][j].move(movespeed*moveway);
-
+					//敵が弾を撃つかどうか
 					double t = enemy[i][j].shoot(lives);
 					if(t != 0) {
 						enemyshot.add(new EnemyShot(enemy[i][j].getX()+enemy[0][0].getObject_x()/2,enemy[i][j].getY()+enemy[0][0].getObject_y(),t,imagemap.get("enemyshot"),this));
@@ -200,12 +205,12 @@ public class Mainframe extends JFrame implements KeyListener {
 			}
 		}
 
-
+		//プレイヤーの弾の移動
 		if(playershot.isExist()) {
 			playershot.move(5.8);
 		}
 
-
+		//敵の弾の移動
 		for(i=0;i<enemyshot.size();i++) {
 			EnemyShot t = enemyshot.get(i);
 			t.move();
@@ -214,11 +219,11 @@ public class Mainframe extends JFrame implements KeyListener {
 			}
 		}
 
-
-
+		//当たり判定
+		//プレイヤーの弾が敵にあたった場合
 		for(i=0;i<ENEMYSIZE_Y;i++) {
 			for(j=0;j<ENEMYSIZE_X;j++) {
-				if(enemy[i][j].isExit()) {
+				if(enemy[i][j].isExist()) {
 					if(!(playershot.getX()+playershot.getObject_x() < enemy[i][j].getX() || enemy[i][j].getX()+enemy[i][j].getObject_x() < playershot.getX())) {
 						if(!(playershot.getY()+playershot.getObject_y() < enemy[i][j].getY() || enemy[i][j].getY()+enemy[i][j].getObject_y() < playershot.getY())) {
 							playershot.hit();
@@ -229,7 +234,7 @@ public class Mainframe extends JFrame implements KeyListener {
 			}
 		}
 
-
+		//敵の弾がプレイヤーにあたった場合
 		for(i=0;i<enemyshot.size();i++) {
 			EnemyShot t = enemyshot.get(i);
 			if(!(t.getX()+t.getObject_x() < player.getX() || player.getX()+player.getObject_x() < t.getX())) {
@@ -240,7 +245,7 @@ public class Mainframe extends JFrame implements KeyListener {
 				}
 			}
 		}
-		graphic.setObject(player, enemy, playershot, enemyshot);
+		
 		graphic.repaint();
 	}
 

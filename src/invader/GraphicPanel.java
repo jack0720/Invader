@@ -42,7 +42,7 @@ public class GraphicPanel extends JPanel{
 
 		for(i=0;i<Mainframe.ENEMYSIZE_Y;i++) {
 			for(j=0;j<Mainframe.ENEMYSIZE_X;j++) {
-				if(enemy[i][j].isExit()) {
+				if(enemy[i][j].isExist()) {
 					t = enemy[i][j].getP();
 					g2.drawImage(enemy[i][j].getImage(), t.x, t.y, this);
 				}
